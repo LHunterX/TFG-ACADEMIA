@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:with="http://www.thymeleaf.org/extras/with"
+      layout:decorate="~{fragments/layout}"
+      th:with="title='Asignatura'">
+<th:block layout:fragment="content">
+    <div class="container">
+        <div class="d-flex justify-content-between w-100 align-items-center">
+            <h1><span th:text="${asignatura.id != null ? 'Editar' : 'Añadir'}"></span> asignatura</h1>
+            <a href="/asignaturas" class="text-sm   ">Volver</a>
+        </div>
+        <form class="mt-4 needs-validation" novalidate th:action="@{/asignatura}" th:object="${asignatura}" method="post">
+            <input name="id" type="hidden" th:value="${asignatura.id}">
+            <div class="mb-3">
+                <label for="name" class="form-label">Nombre</label>
+                <input type="text" autocomplete="off" class="form-control" required id="name"
+                       th:field="${asignatura.nombre}">
+            </div>
+            <div class="mb-4">
+                <label for="descripcion" class="form-label">Descripción</label>
+                <input type="text" autocomplete="off" class="form-control" required id="descripcion"
+                       th:field="${asignatura.descripcion}">
+            </div>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+        </form>
+    </div>
+</th:block>
+</html>
+

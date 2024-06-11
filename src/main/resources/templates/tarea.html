@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:with="http://www.thymeleaf.org/extras/with"
+      layout:decorate="~{fragments/layout}"
+      th:with="title='Tarea'">
+<th:block layout:fragment="content">
+    <div class="container">
+        <div class="d-flex justify-content-between w-100 align-items-center">
+            <h1><span th:text="${tarea.id != null ? 'Editar' : 'Añadir'}"></span> tarea</h1>
+            <button class="btn btn-link" onclick="window.history.back()">Volver</button>
+        </div>
+        <form class="mt-4 needs-validation" novalidate
+              th:action="${'/asignatura_profesor/'+tarea.asignatura.id+'/tarea'}"
+              th:object="${tarea}" method="post">
+            <input name="id" type="hidden" th:value="${tarea.id}">
+            <input name="asignatura.id" type="hidden" th:value="${tarea.asignatura.id}">
+            <div class="mb-3">
+                <label for="name" class="form-label">Nombre</label>
+                <input type="text" autocomplete="off" class="form-control" required id="name"
+                       th:field="${tarea.nombre}">
+            </div>
+            <div class="mb-4">
+                <label for="descripcion" class="form-label">Descripción</label>
+                <input type="text" autocomplete="off" class="form-control" required id="descripcion"
+                       th:field="${tarea.descripcion}">
+            </div>
+            <div class="mb-4">
+                <label for="fecha" class="form-label">Fecha límite</label>
+                <input type="date" autocomplete="off" class="form-control" required id="fecha"
+                       th:field="${tarea.fechaLimite}">
+            </div>
+
+            <div th:if="${tarea.id != null}">
+
+                <h3>Entregas</h3>
+
+                <table class="table table-striped rounded-2 border mt-2" th:if="${!tarea.entregas.isEmpty()}">
+                    <thead>
+                    <tr>
+                        <th style="width: 30px"></th>
+                        <th>Alumno</th>
+                        <th>Archivo</th>
+                        <th style="width: 150px">Nota</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="entrega, itemStats: ${tarea.entregas}">
+                        <td class="py-3"><img
+                                th:src="${entrega.alumno.foto != null?'/archivos/' + entrega.alumno.foto:'/img/circle-user-solid.svg'}"
+                                class="my-auto rounded-circle" style="width: 30px; height: 30px"/></td>
+                        <td class="py-3" th:text="${entrega.alumno.name}"></td>
+                        <td class="py-3"><a target="_blank" th:href="${'/archivos/' + entrega.archivo.id}">Descargar</a>
+                        </td>
+                        <td>
+                            <input type="hidden" th:field="${tarea.entregas[__${itemStats.index}__].id}">
+                            <input type="hidden" th:field="${tarea.entregas[__${itemStats.index}__].alumno.id}">
+                            <input type="hidden" th:field="${tarea.entregas[__${itemStats.index}__].tarea.id}">
+                            <input type="hidden" th:field="${tarea.entregas[__${itemStats.index}__].archivo.id}">
+                            <input type="number" class="form-control"
+                                   th:field="${tarea.entregas[__${itemStats.index}__].nota}">
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <div th:if="${tarea.entregas.isEmpty()}" class="mt-4 alert alert-warning">No hay entregas</div>
+
+            </div>
+
+            <button type="submit" class="btn btn-primary mt-4">Guardar</button>
+        </form>
+    </div>
+</th:block>
+</html>
+

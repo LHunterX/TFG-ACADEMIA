@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<div th:replace="~{fragments/head :: head (title='Error')}"></div>
+<body>
+<div class="bg-light h-100 row">
+    <div class="card p-4 col-10 col-md-6 col-lg-4 col-xl-3 mx-auto my-auto text-center">
+        <div class="px-5 mb-5">
+            <img style="height: auto; width: 100%" src="/img/pi_logo.png"/>
+        </div>
+        <h1 th:text="${msg}"></h1>
+        <a href="/" class="btn btn-primary mt-5">Volver al inicio</a>
+
+    </div>
+</div>
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

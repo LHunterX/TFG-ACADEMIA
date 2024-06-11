@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:with="http://www.thymeleaf.org/extras/with"
+      layout:decorate="~{fragments/layout}"
+      th:with="title='Cursos'">
+<th:block layout:fragment="content">
+    <div class="container">
+        <div class="d-flex justify-content-between w-100 align-items-center">
+            <h1>Cursos</h1>
+            <div>
+                <a class="btn btn-primary rounded" href="/curso/">
+                    Añadir
+                </a>
+            </div>
+        </div>
+        <table class="table table-striped rounded-2 border mt-2" th:if="${!empty}">
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="curso: ${cursos}">
+                <td th:text="${curso.id}"></td>
+                <td th:text="${curso.nombre}"></td>
+                <td class="text-end">
+                    <a class="btn btn-primary btn-sm" th:href="'/curso/' + ${curso.id}">
+                        <i class="bi-pencil"></i>
+                    </a>
+                    <button class="btn btn-danger btn-sm" data-bs-toggle="modal"
+                            th:data-bs-target="${'#modal-' + curso.id}">
+                        <i class="bi-trash"></i>
+                    </button>
+                    <div class="modal" tabindex="-1" th:id="${'modal-' + curso.id}">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Eliminar curso</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body text-start">
+                                    <p>Se va a eliminar la curso
+                                        <span th:text="${curso.nombre}" class="fw-bold"></span>. ¿Desea continuar?
+                                    </p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                        Cancelar
+                                    </button>
+                                    <form th:action="${'/curso/' + curso.id}" th:method="'delete'">
+                                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div th:if="${empty}" class="mt-4 alert alert-warning">No hay cursos</div>
+    </div>
+</th:block>
+</html>
+

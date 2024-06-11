@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:with="http://www.thymeleaf.org/extras/with"
+      layout:decorate="~{fragments/layout}"
+      th:with="title='Promociones'">
+<th:block layout:fragment="content">
+    <div class="container">
+        <div class="d-flex justify-content-between w-100 align-items-center">
+            <h1><span th:text="${promocion.id != null ? 'Editar' : 'Añadir'}"></span> promocion</h1>
+            <a href="/promociones" class="text-sm">Volver</a>
+        </div>
+        <form class="mt-4 needs-validation" novalidate th:action="@{/promocion}" th:object="${promocion}" method="post">
+            <input name="id" type="hidden" th:field="${promocion.id}">
+
+            <div class="mb-3">
+                <label for="curso" class="form-label">Curso</label>
+                <select class="form-select" name="curso" id="curso" th:field="${promocion.curso.id}"
+                        th:disabled="${promocion.id != null}" oninput="location.search='?curso=' + this.value">
+                    <option th:each="curso: ${todosCursos}" th:text="${curso.nombre}"
+                            th:value="${curso.id}"></option>
+                </select>
+            </div>
+
+            <div class="mb-3 d-flex">
+                <div class="w-50 pe-4">
+                    <label for="name" class="form-label">Inicio</label>
+                    <input type="date" autocomplete="off" class="form-control" required id="name"
+                           th:field="${promocion.inicio}" th:disabled="${promocion.id != null}">
+                </div>
+                <div class="w-50 ">
+                    <label for="descripcion" class="form-label">Final</label>
+                    <input type="date" autocomplete="off" class="form-control" required id="descripcion"
+                           th:field="${promocion.fin}" th:disabled="${promocion.id != null}">
+                </div>
+            </div>
+
+            <h3 th:if="${curso.id != null}">Asignaturas</h3>
+            <div th:each="asig, asigStats: ${promocion.asignaturas}" class="my-4 card p-4">
+                <h4 th:text="${asig.asignatura.nombre}"></h4>
+
+                <input type="hidden" th:field="${promocion.asignaturas[__${asigStats.index}__].asignatura.id}"/>
+                <input type="hidden" th:field="${promocion.asignaturas[__${asigStats.index}__].id}"/>
+
+                <label for="profesor" class="form-label">Profesor</label>
+                <select class="form-select mb-3" name="profesor" id="profesor"
+                        th:field="${promocion.asignaturas[__${asigStats.index}__].profesor.id}">
+                    <option th:each="prof: ${profesores}" th:text="${prof.name}"
+                            th:value="${prof.id}"></option>
+                </select>
+
+                <span >Alumnos</span>
+                <div class="grid mt-3">
+                    <div th:each="pAlumno, itemStats: ${asig.alumnos}">
+                        <input type="hidden"
+                               th:field="${promocion.asignaturas[__${asigStats.index}__].alumnos[__${itemStats.index}__].id}">
+                        <select class="form-select" name="alumno" id="alumno"
+                                th:field="${promocion.asignaturas[__${asigStats.index}__].alumnos[__${itemStats.index}__].id}">
+                            <option th:each="alumno: ${alumnos}" th:text="${alumno.name}"
+                                    th:value="${alumno.id}"></option>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+
+            <button type="submit" class="btn btn-primary">Guardar</button>
+        </form>
+    </div>
+</th:block>
+</html>
+

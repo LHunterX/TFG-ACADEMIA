@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:with="http://www.thymeleaf.org/extras/with"
+      layout:decorate="~{fragments/layout}"
+      th:with="title='Inicio'">
+<th:block layout:fragment="content">
+    <div class="container">
+        <div class="d-flex justify-content-between w-100 align-items-center">
+            <h1>Conversaciones</h1>
+            <a href="/mensaje" class="btn btn-primary">Nuevo</a>
+        </div>
+
+
+        <table class="table table-striped rounded-2 border mt-2" th:if="${!empty}">
+            <thead>
+            <tr>
+                <th>Usuario</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="conversacion: ${conversaciones}">
+                <td>
+                    <span th:text="${conversacion.usuario1.id == user_id ? conversacion.usuario2.name : conversacion.usuario1.name }"></span>
+                </td>
+                <td class="text-end">
+                    <a th:href="'/mensajes/' + ${conversacion.id}" class="btn btn-sm btn-primary">Ver</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div th:if="${empty}" class="mt-4 alert alert-warning">No hay mensajes</div>
+    </div>
+</th:block>
+</html>
+

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout}"
+      th:with="title='Expediente'">
+<th:block layout:fragment="content">
+    <div class="container">
+        <div class="d-flex justify-content-between w-100 align-items-center">
+            <h1>Expediente</h1>
+        </div>
+
+
+        <table class="table table-striped rounded-2 border mt-2" th:if="${!promociones.isEmpty()}">
+            <thead>
+            <tr>
+                <th>Curso</th>
+                <th>Inicio</th>
+                <th>Fin</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="prom: ${promociones}">
+                <td th:text="${prom.curso.nombre}"></td>
+                <td th:text="${#dates.format(prom.inicio, 'dd/MM/yyyy')}"></td>
+                <td th:text="${#dates.format(prom.fin, 'dd/MM/yyyy')}"></td>
+                <td class="text-end">
+                    <a th:href="'/promocion_alumno/' + ${prom.id}" class="btn btn-primary">Ver</a>
+                </td>
+            </tbody>
+        </table>
+        <div th:if="${promociones.isEmpty()}" class="mt-4 alert alert-warning">El expediente está vacío</div>
+    </div>
+</th:block>
+</html>
+

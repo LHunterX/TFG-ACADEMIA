@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:with="http://www.thymeleaf.org/extras/with"
+      layout:decorate="~{fragments/layout}"
+      th:with="title='Promociones'">
+<th:block layout:fragment="content">
+    <div class="container">
+        <div class="d-flex justify-content-between w-100 align-items-center">
+            <h1>Promociones</h1>
+            <div>
+                <a class="btn btn-primary rounded" href="/promocion/">
+                    Añadir
+                </a>
+            </div>
+        </div>
+        <table class="table table-striped rounded-2 border mt-2" th:if="${!empty}">
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Curso</th>
+                <th>Inicio</th>
+                <th>Final</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="promocion: ${promociones}">
+                <td th:text="${promocion.id}"></td>
+                <td th:text="${promocion.curso.nombre}"></td>
+                <td th:text="${#dates.format(promocion.inicio, 'dd/MM/yyyy')}"></td>
+                <td th:text="${#dates.format(promocion.fin, 'dd/MM/yyyy')}"></td>
+                <td class="text-end">
+                    <a class="btn btn-primary btn-sm" th:href="'/promocion/' + ${promocion.id}">
+                        <i class="bi-pencil"></i>
+                    </a>
+                    <button class="btn btn-danger btn-sm" data-bs-toggle="modal"
+                            th:data-bs-target="${'#modal-' + promocion.id}">
+                        <i class="bi-trash"></i>
+                    </button>
+                    <div class="modal" tabindex="-1" th:id="${'modal-' + promocion.id}">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Eliminar promocion</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body text-start">
+                                    <p>Se va a eliminar la promocion de
+                                        <span th:text="${promocion.curso.nombre}" class="fw-bold"></span>
+                                        (<span th:text="${promocion.inicio}" class="fw-bold"></span> -
+                                        <span th:text="${promocion.fin}" class="fw-bold"></span>). ¿Desea
+                                        continuar?
+                                    </p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                        Cancelar
+                                    </button>
+                                    <form th:action="${'/promocion/' + promocion.id}" th:method="'delete'">
+                                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div th:if="${empty}" class="mt-4 alert alert-warning">No hay promociones</div>
+    </div>
+</th:block>
+</html>
+

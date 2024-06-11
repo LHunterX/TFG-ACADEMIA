@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout}"
+      th:with="title='Usuarios'">
+<th:block layout:fragment="content">
+    <div class="container">
+        <div class="d-flex justify-content-between w-100 align-items-center">
+            <div>
+                <h1 th:text="${asignatura.asignatura.nombre}"></h1>
+                <span class="opacity-50"
+                      th:text="${asignatura.promocion.curso.nombre + ' ' + (asignatura.promocion.inicio.year + 1900) + ' - ' + (asignatura.promocion.fin.year + 1900)}"></span>
+            </div>
+            <a onclick="history.back()" class="btn btn-link text-sm">Volver</a>
+        </div>
+
+        <div class="card p-3 mt-2">
+            <span class="fw-bold">Profesor</span>
+            <div class="d-flex align-items-center mt-2">
+                <div class="me-4">
+                    <img th:src="${asignatura.profesor.foto != null?'/archivos/' + asignatura.profesor.foto:'/img/circle-user-solid.svg'}"
+                         class="rounded-circle" style="width: 50px; height: 50px"/>
+                </div>
+                <div>
+                    <span th:text="${asignatura.profesor.name}" class="fw-bold"></span><br>
+                    <span th:text="${asignatura.profesor.email}"></span>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="mt-4">Tareas</h2>
+
+        <div th:if="${!asignatura.tareas.isEmpty()}">
+
+            <div th:each="tarea : ${asignatura.tareas}" class="card p-4 mt-4">
+                <h4 th:text="${tarea.nombre}"></h4>
+                <p th:text="${tarea.descripcion}"></p>
+                <div style="font-size: 14px">
+                    <b>Fecha límite:</b>
+                    <span th:text="${#dates.format(tarea.fechaLimite, 'dd/MM/yyyy')}"></span>
+                </div>
+
+                <div th:if="${!tarea.entregas.isEmpty()}">
+                    <hr>
+                    <b>Subido: </b><a target="_blank" th:href="${'/archivos/' + tarea.entregas[0]?.archivo?.id}"
+                                      th:text="${tarea.entregas[0]?.archivo?.name}"></a>
+                </div>
+                <form class="needs-validation" novalidate th:object="${entrega}" method="post"
+                      th:action="${'/entrega'}" enctype="multipart/form-data"
+                      th:if="${tarea.fechaLimite.after(#dates.createNow()) && (tarea.entregas.isEmpty() || tarea.entregas[0].nota == null)}">
+                    <hr>
+                    <label for="file" class="form-label fw-bold" th:if="${!tarea.entregas.isEmpty()}">
+                        Volver a subir:
+                    </label>
+                    <label for="file" class="form-label fw-bold" th:if="${tarea.entregas.isEmpty()}">
+                        Subir entrega:
+                    </label>
+                    <div class="d-flex align-items-center">
+                        <input class="form-control me-4" required type="file" id="file" name="file">
+                        <input type="hidden" name="tarea_id" th:value="${tarea.id}">
+                        <input type="hidden" name="asignatura_id" th:value="${asignatura.id}">
+                        <button class="btn btn-primary" type="submit">Subir</button>
+                    </div>
+
+                </form>
+
+                <div th:if="${!tarea.entregas.isEmpty() && tarea.entregas[0].getNota() != null}">
+                    <hr>
+                    <b>Nota: </b>
+                    <span th:if="${tarea.entregas[0]?.getNota() == null}">Sin calificar</span>
+                    <span th:if="${tarea.entregas[0]?.getNota() != null}" th:text="${tarea.entregas[0].nota}"></span>
+                </div>
+
+                <div th:if="${tarea?.entregas.isEmpty() && !tarea.fechaLimite.after(#dates.createNow())}">
+                    <hr>
+                    <b>Sin entregar</b>
+                </div>
+
+
+            </div>
+        </div>
+        <div th:if="${asignatura.tareas.isEmpty()}" class="mt-4 alert alert-warning">No hay tareas</div>
+    </div>
+</th:block>
+</html>
+

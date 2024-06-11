@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:with="http://www.thymeleaf.org/extras/with"
+      layout:decorate="~{fragments/layout}"
+      th:with="title='Cursos'">
+<th:block layout:fragment="content">
+    <div class="container">
+        <div class="d-flex justify-content-between w-100 align-items-center">
+            <h1><span th:text="${curso.id != null ? 'Editar' : 'Añadir'}"></span> curso</h1>
+            <a href="/cursos" class="text-sm   ">Volver</a>
+        </div>
+        <form class="mt-4 needs-validation" novalidate th:action="@{/curso}" th:object="${curso}" method="post">
+            <input name="id" type="hidden" th:value="${curso.id}">
+            <div class="mb-3">
+                <label for="name" class="form-label">Nombre</label>
+                <input type="text" autocomplete="off" class="form-control" required id="name"
+                       th:field="${curso.nombre}">
+            </div>
+            <div class="mb-4">
+                <label for="descripcion" class="form-label">Descripción</label>
+                <input type="text" autocomplete="off" class="form-control" required id="descripcion"
+                       th:field="${curso.descripcion}">
+            </div>
+
+            <span>Asignaturas</span>
+            <div class="mt-2 mb-4" th:each="asignaturaCurso, itemStats : *{asignaturas}">
+                <select class="form-select" th:field="*{asignaturas[__${itemStats.index}__].id}">
+                    <option th:each="asignatura: ${todasAsignaturas}" th:text="${asignatura.nombre}"
+                            th:value="${asignatura.id}"></option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Guardar</button>
+        </form>
+    </div>
+</th:block>
+</html>
+

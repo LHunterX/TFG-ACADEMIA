@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:with="http://www.thymeleaf.org/extras/with"
+      layout:decorate="~{fragments/layout}"
+      th:with="title='Usuarios'">
+<th:block layout:fragment="content">
+    <div class="container">
+        <div class="d-flex justify-content-between w-100 align-items-center">
+            <h1><span th:text="${usuario.id != null ? 'Editar' : 'Añadir'}"></span> usuario</h1>
+            <a href="/usuarios" class="text-sm">Volver</a>
+        </div>
+        <form class="mt-4 needs-validation" novalidate th:action="@{/usuario}" th:object="${usuario}" method="post">
+            <input name="id" type="hidden" th:value="${usuario.id}">
+            <div class="mb-3">
+                <label for="name" class="form-label">Nombre</label>
+                <input type="text" autocomplete="off" class="form-control" required id="name"
+                       th:field="${usuario.name}">
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" autocomplete="off" class="form-control" required id="email"
+                       th:field="${usuario.email}">
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Contraseña</label>
+                <input type="password" autocomplete="off" class="form-control" id="password"
+                       th:field="${usuario.contraseña}">
+            </div>
+            <div class="mb-3">
+                <label for="role" class="form-label">Rol</label>
+                <select class="form-select" id="role" required th:field="${usuario.rol}">
+                    <option value="ALUMNO">Alumno</option>
+                    <option value="PROFESOR">Profesor</option>
+                    <option value="ADMIN">Admin</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+        </form>
+    </div>
+</th:block>
+</html>
+

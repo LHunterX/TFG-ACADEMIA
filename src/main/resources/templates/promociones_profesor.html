@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout}"
+      th:with="title=${title}">
+<th:block layout:fragment="content">
+    <div class="container">
+
+
+        <div class="d-flex justify-content-between w-100 align-items-center">
+            <h1 th:text="${title}"></h1>
+        </div>
+
+        <div th:if="${promociones.isEmpty()}" class="mt-4 alert alert-warning">No tiene cursos</div>
+        <div th:if="${!promociones.isEmpty()}" th:each="promocion: ${promociones}" class="mt-4">
+            <table class="table table-striped rounded-2 border mt-2">
+                <thead>
+                <tr>
+                    <th th:text="${promocion.curso.nombre + ' ' + (promocion.inicio.year + 1900) + ' - ' + (promocion.fin.year + 1900)}"></th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="asig: ${promocion.asignaturas}">
+                    <td th:text="${asig.asignatura.nombre}"></td>
+                    <td class="text-end">
+                        <a th:href="@{'/asignatura_profesor/' + ${asig.id}}"
+                           class="btn btn-primary btn-sm">
+                            Ver
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</th:block>
+</html>
+

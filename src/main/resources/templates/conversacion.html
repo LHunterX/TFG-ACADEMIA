@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:with="http://www.thymeleaf.org/extras/with"
+      layout:decorate="~{fragments/layout}"
+      th:with="title='Inicio'">
+<th:block layout:fragment="content">
+
+    <div class="container">
+
+        <div class="d-flex justify-content-between w-100 align-items-center">
+            <h1 th:text="${conversacion.id != null ? (conversacion.usuario1.id == user_id ? conversacion.usuario2.name : conversacion.usuario1.name)  : 'Nuevo mensaje'}"></h1>
+            <a href="/conversaciones">Volver</a>
+        </div>
+
+        <div>
+            <form class="mt-4 needs-validation" novalidate th:action="@{/conversacion}" th:object="${conversacion}"
+                  method="post">
+
+                <div th:if="conversacion.id" class="w-100">
+                    <div th:each="mensaje : ${conversacion.mensajes.subList(0, conversacion.mensajes.size() - 1)}"
+                         class="card p-2 w-50 mb-2" th:style="${mensaje.emisor.id == user_id ? 'margin-left: 50%' : ''}">
+                        <span class="fw-bold" th:text="${mensaje.emisor.name} + ':'"></span>
+                        <span th:text="${mensaje.mensaje}"/>
+                    </div>
+
+                    <hr>
+                </div>
+                <div class="mb-4" th:if="${conversacion.id == null}">
+                    <label for="destinatario" class="form-label">Destinatario</label>
+                    <select class="form-select" name="destinatario" id="destinatario"
+                            th:field="${conversacion.usuario2.id}">
+                        <option th:each="usuario: ${todosUsuarios}" th:text="${usuario.name}"
+                                th:value="${usuario.id}"></option>
+                    </select>
+                </div>
+                <input type="hidden" th:field="${conversacion.id}">
+                <input type="hidden" th:field="${conversacion.usuario1.id}">
+                <input type="hidden" th:field="${conversacion.usuario2.id}">
+                <input type="hidden" th:field="${conversacion.mensajes[__${conversacionSize}__].emisor.id}">
+                <input type="hidden" th:field="${conversacion.mensajes[__${conversacionSize}__].receptor.id}">
+                <label>Mensaje</label>
+                <textarea class="form-control" th:field="${conversacion.mensajes[__${conversacionSize}__].mensaje}"></textarea><br>
+                <button type="submit" class="btn btn-primary">Enviar</button>
+            </form>
+
+        </div>
+    </div>
+
+</th:block>
+</html>
+

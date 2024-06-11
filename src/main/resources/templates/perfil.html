@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:with="http://www.thymeleaf.org/extras/with"
+      layout:decorate="~{fragments/layout}"
+      th:with="title='Usuarios'">
+<th:block layout:fragment="content">
+    <div class="container">
+        <div class="d-flex justify-content-between w-100 align-items-center">
+            <h1>Editar perfil</h1>
+            <a href="/logout" class="text-sm text-danger">Cerrar sesión</a>
+        </div>
+        <form class="mt-4 needs-validation" novalidate th:action="@{/perfil}" th:object="${usuario}" method="post"
+              enctype="multipart/form-data">
+            <input name="id" type="hidden" th:value="${usuario.id}">
+            <div class="d-flex mb-4">
+                <div class="me-4" th:if="${user_foto != null}">
+                    <img th:src="${'/archivos/' + user_foto}" class="rounded-circle"
+                         style="width: 100px; height: 100px">
+                </div>
+                <div class="mb-3">
+                    <label for="foto" class="form-label">Foto</label>
+                    <input type="file" autocomplete="off" class="form-control" required id="foto" name="foto_file"
+                           accept="image/jpeg, image/png">
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="name" class="form-label">Nombre</label>
+                <input type="text" autocomplete="off" class="form-control" required id="name"
+                       th:field="${usuario.name}">
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" autocomplete="off" class="form-control" required id="email"
+                       th:field="${usuario.email}">
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Contraseña</label>
+                <input type="password" autocomplete="off" class="form-control" id="password"
+                       th:field="${usuario.contraseña}">
+            </div>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+        </form>
+    </div>
+</th:block>
+</html>
+
